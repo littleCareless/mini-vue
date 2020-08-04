@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Document</title><script src="index.js"></script></head><body><div id="app">{{name}}</div><input id="input"> <button id="btn">button</button><script>const w = new MiniVue({
+      el: '#app',
+      data: {
+        "name": "加载中...",
+        "age": '加载中...',
+        "content": "我是一枚优秀的程序员",
+        "htmlSpan": '<a href="http://wwww.zhuangweizhan.com">点击欢迎进入个人主页 </a>'
+      },
+      // created() {
+      //   setTimeout(() => {
+      //     this.age = "25岁";
+      //     this.name = "weizhan";
+      //   }, 800);
+      // },
+      // methods: {
+      //   changeName() {
+      //       alert("欢迎进入个人主页: http://www.zhuangweizhan.com");
+      //   }
+      // }
+    })
+    const button = document.querySelector("#btn")
+    const input = document.querySelector("#input")
+    button.addEventListener('click',()=>{
+      w.$data.name = input.value
+    })</script></body></html>
