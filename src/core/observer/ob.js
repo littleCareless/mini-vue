@@ -17,10 +17,12 @@ export class Observer {
     } else {
       // val为数组时的逻辑
       // 判断浏览器是否支持 __proto__ 如果支持执行 protoAugment（覆盖原型） 否则执行 copyAugment（将方法挂载到value）
-      const augment = hasProto ? protoAugment : copyAugment
-      augment(value, arrayMethods, arrayKeys)
+      // const augment = hasProto ? protoAugment : copyAugment
+      // augment(value, arrayMethods, arrayKeys)
       // 将 拦截器赋值给value._proto_ 通过_proto_可以很巧妙的实现覆盖value原型的功能
-      value.__proto__ = arrayMethods
+      // value.__proto__ = arrayMethods
+
+      this.observeArray(value)
     }
   }
   walk(obj) {
@@ -30,6 +32,14 @@ export class Observer {
     for (let i = 0, len = keys.length; i < len; i++) {
       // 将当前的对象 当前的key 以及 value 传入
       defineReactive(obj, keys[i], obj[keys[i]])
+    }
+  }
+  /**
+   * 侦测Array中的每一项
+   */
+  observeArray(items) {
+    for(let i = 0,len=items.length;i<len;i++) {
+      observe(items[i])
     }
   }
 }
@@ -52,6 +62,7 @@ function observe (value,asRootData) {
   }
   return ob
 }
+
 function defineReactive(data, key, val) {
   // 递归 如果 value是对象的话
   if (typeof val === 'object') {
