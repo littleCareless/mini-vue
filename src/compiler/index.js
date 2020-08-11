@@ -44,20 +44,42 @@ export default class Compile {
      * ？表示非贪婪模式，尽可能早的结束查找
      * */
     const reg = /\{\{(.+?)\}\}/
+    const arrayReg = /\S*\[\d\]/
+    const reg2 = /(.*?)\[(.*?)\]/
     var param = node.textContent
     if (reg.test(param)) {
       //  $1表示匹配的第一个
       const key = RegExp.$1.trim()
-      node.textContent = param.replace(reg, this.$vm.$data[key])
+      // const reg = /({{(.*)}})/;
+     
+      // const key = String(param.match(reg)).match(reg2)[0]//获取监听的key
+      
       // 编译模板的时候，创建一个watcher实例，并在内部挂载到Dep上
       console.log(this.$vm.$data)
       console.log(key)
       console.log(this.$vm.$data[key])
-      new Watcher(this.$vm.$data, key, (newValue) => {
-        // 通过回调函数，更新视图
-        console.log('通过回调函数，更新视图', newValue)
-        node.textContent = newValue
-      })
+      if(arrayReg.test(key)){
+        // 
+        console.log('123')
+        const aKey = key.match(reg2)[1]
+        const aVal = key.match(reg2)[2]
+        console.log(this.$vm.$data[aKey][aVal])
+        node.textContent = param.replace(reg, this.$vm.$data[aKey][aVal])
+
+        new Watcher(this.$vm.$data[aKey], aVal, (newValue) => {
+          // 通过回调函数，更新视图
+          console.log('通过回调函数，更新视图', newValue)
+          node.textContent = newValue
+        })
+      }else{
+        node.textContent = param.replace(reg, this.$vm.$data[key])
+        new Watcher(this.$vm.$data, key, (newValue) => {
+          // 通过回调函数，更新视图
+          console.log('通过回调函数，更新视图', newValue)
+          node.textContent = newValue
+        })
+      }
+      
     }
   }
 }

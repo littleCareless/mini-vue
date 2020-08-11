@@ -8,17 +8,30 @@
 <body>
     <div id="app">
       {{name}}
+      <div>
+        {{list[0]}}
+      </div>
+      <div>
+        {{obj.name}}
+      </div>
     </div>
     <input type="text" id="input">
-    <button id="btn">button</button>
+    <button id="btn">提交 修改 name</button>
+    <button id="un">卸载watch监听</button>
+    <button id="setBtn">$set添加字段</button>
+    <button id="delBtn">$del删除字段</button>
   <script>
-    const w = new MiniVue({
+    const vm = new MiniVue({
       el: '#app',
       data: {
-        "name": "加载中...",
-        "age": '加载中...',
-        "content": "我是一枚优秀的程序员",
-        "htmlSpan": '<a href="http://wwww.zhuangweizhan.com">点击欢迎进入个人主页 </a>'
+        name: "加载中...",
+        age: '加载中...',
+        content: "我是一枚优秀的程序员",
+        htmlSpan: '<a href="www.moveweb.vip">点击欢迎进入个人主页 </a>',
+        list: ['aaa','bbb','ccc'],
+        obj:{
+
+        }
       },
       // created() {
       //   setTimeout(() => {
@@ -33,9 +46,33 @@
       // }
     })
     const button = document.querySelector("#btn")
+    const un = document.querySelector('#un')
+    const setBtn = document.querySelector("#setBtn")
+    const delBtn = document.querySelector('#delBtn')
     const input = document.querySelector("#input")
     button.addEventListener('click',()=>{
-      w.$data.name = input.value
+      vm.$data.name = input.value
+      // w.$data.list[0] = input.value
+      // console.log(w.$data.list[0]);
+    })
+
+    const unwatch = vm.$watch('name',function (newVal,oldVal){
+      console.log('回调函数被触发',newVal,oldVal);
+    },{
+      immediate:true
+    })
+    un.addEventListener('click',()=>{
+      unwatch();
+    })
+    setBtn.addEventListener("click",()=>{
+      const val = vm.$set(vm.$data.obj,'name','张三')
+      console.log(val);
+      console.log('$data',vm.$data);
+    })
+    delBtn.addEventListener("click",()=>{
+      const val = vm.$delete(vm.$data.obj,'name')
+      console.log(val);
+      console.log('$data',vm.$data);
     })
   </script>
 </body>
